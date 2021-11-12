@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import sequelize from "Loaders/sequelize/connection";
 import {DataTypes, Model} from "sequelize";
-import {UserRole} from "Utils/enum/";
 
 class User extends Model {
 	public user_id!: string;
@@ -11,8 +10,6 @@ class User extends Model {
 	public name!: string;
 
 	public password!: string;
-
-	public role: UserRole;
 
 	public check_password: (
 		inputPassword: string,
@@ -24,8 +21,9 @@ User.init(
 	{
 		user_id: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
 			primaryKey: true,
+			unique: true,
+			autoIncrement: true,
 		},
 		username: {
 			type: DataTypes.STRING,
@@ -38,11 +36,6 @@ User.init(
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
-		},
-		role: {
-			type: DataTypes.ENUM(UserRole.Admin, UserRole.User),
-			allowNull: false,
-			defaultValue: UserRole.User,
 		},
 	},
 	{

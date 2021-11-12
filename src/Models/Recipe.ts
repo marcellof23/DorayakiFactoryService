@@ -1,39 +1,37 @@
 import sequelize from "Loaders/sequelize/connection";
 import {DataTypes, Model} from "sequelize";
+import {Ingredient} from ".";
 
-import User from "./User";
+class Recipe extends Model {
+	public recipe_id!: number;
 
-class Sample extends Model {
-	public sample_id!: number;
+	public name!: string;
 
-	public dummy!: string;
+	public Ingredients?: [Ingredient];
 }
 
-Sample.init(
+Recipe.init(
 	{
-		sample_id: {
+		recipe_id: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
 			primaryKey: true,
+			unique: true,
+			autoIncrement: true,
 		},
-		dummy: {
+		name: {
 			type: DataTypes.STRING,
 			allowNull: false,
+			defaultValue: 1,
 		},
 	},
 	{
 		sequelize,
-		modelName: "Sample",
-		tableName: "sample",
+		modelName: "Recipe",
+		tableName: "recipe",
 		timestamps: true,
 		createdAt: "created_at",
 		updatedAt: "updated_at",
 	}
 );
 
-Sample.belongsTo(User, {
-	foreignKey: "user_id",
-	as: "samples",
-});
-
-export default Sample;
+export default Recipe;
