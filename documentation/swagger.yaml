@@ -1,0 +1,63 @@
+swagger: "2.0"
+info:
+  description: "This is a simple documentation for aplikasi backend"
+  version: "1.0.0"
+  title: "Aplikasi"
+schemes:
+- "https"
+- "http"
+paths:
+  /sample/all:
+    get:
+      tags:
+      - "sample"
+      summary: "Get all samples"
+      description: "Auth: Public"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Sample"
+      security:
+      - auth: [kasir]
+securityDefinitions:
+  auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: https://aplikasi.com/api/auth/getUser
+    tokenUrl: https://aplikasi.com/api/auth/getToken
+    scopes:
+      admin: Grants admin level authorization
+      user: Grants user level authorization
+      pegawai: Grants pegawai level authorization
+definitions:
+  Sample:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      dummy:
+        type: "string"
+      user_id:
+        type: "integer"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      status:
+        type: "string"
+      message:
+        type: "string"
+      data:
+        type: "object"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

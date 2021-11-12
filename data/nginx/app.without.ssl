@@ -1,0 +1,23 @@
+upstream docker_server {
+	server api-server:5000;
+}
+
+server {
+	server_name yourdomain.com;
+
+	location / {
+		try_files $uri @apiserver;
+	}
+
+	location @apiserver {
+		proxy_pass http://docker_server;
+		add_header X-Frame-Options "SAMEORIGIN" always;
+		add_header X-XSS-Protection "1; mode=block" always;
+		add_header X-Content-Type-Options "nosniff" always;
+		add_header Referrer-Policy "no-referrer-when-downgrade" always;
+		add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+	}
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+}

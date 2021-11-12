@@ -1,0 +1,1 @@
+mkdir -p logs && cd ./src/Public && mkdir -p Uploads
