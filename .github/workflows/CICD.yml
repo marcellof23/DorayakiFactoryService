@@ -1,0 +1,39 @@
+# name: CICD
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   CI:
+#     runs-on: ubuntu-latest
+#     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+#     steps:
+#       - uses: actions/checkout@master
+#       - name: Publish Production to Registry
+#         uses: elgohr/Publish-Docker-Github-Action@master
+#         with:
+#           name: michaelpege/express-ts-sequelize-boilerplate
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.TOKEN }}
+#           registry: ghcr.io
+#           tags: "production"
+           
+#   CD:
+#     runs-on: ubuntu-latest
+#     needs : [CI]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Deploy with SSH
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           key: ${{ secrets.PRIVATE_KEY }}
+#           port: 22
+#           script: |
+#             cd ~/apps/backend
+#             git pull https://${{ secrets.TOKEN }}@github.com/michaelpege/express-ts-sequelize-boilerplate
+#             docker-compose pull
+#             docker-compose up --build -d --remove-orphans

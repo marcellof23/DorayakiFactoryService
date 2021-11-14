@@ -1,0 +1,74 @@
+version : '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    container_name : mysql
+    env_file: ./.env
+    environment:
+      - MYSQL_DATABASE=$SEQUELIZE_DB
+      - MYSQL_ROOT_PASSWORD=$SEQUELIZE_PASSWORD
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./scripts/init.sql:/data/application/scripts/init.sql
+    networks:
+      - app-network
+
+  api-server:
+    depends_on: 
+      - db
+    build:
+      context: .
+    container_name: api-server
+    command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; yarn start'
+    env_file: ./.env
+    environment:
+      - SEQUELIZE_HOST=db
+      - SEQUELIZE_USERNAME=$SEQUELIZE_USERNAME
+      - SEQUELIZE_PASSWORD=$SEQUELIZE_PASSWORD
+      - SEQUELIZE_DB=$SEQUELIZE_DB
+      - SEQUELIZE_PORT=$SEQUELIZE_PORT
+    ports:
+      - 5000:5000
+    volumes:
+      - ./logs:/logs
+    networks:
+      - app-network
+  
+  certbot:
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    container_name: certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    command: certonly --webroot --webroot-path=/var/www/html --email ${EMAIL:-youremail@gmail.com} --agree-tos --no-eff-email --force-renewal -d yourdomain.com
+    depends_on:
+      - nginx
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  
+  nginx:
+    image: nginx:1.15-alpine
+    container_name: nginx
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - api-server
+    networks:
+      - app-network
+  
+volumes:
+  db-data:
+  logs:
+
+networks:
+  app-network:
