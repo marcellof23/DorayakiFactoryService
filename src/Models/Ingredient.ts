@@ -1,7 +1,6 @@
 import sequelize from "Loaders/sequelize/connection";
 import {DataTypes, Model} from "sequelize";
 import {UnitEnum} from "Utils/enum/";
-import {RecipeIngredient, Recipe} from ".";
 
 class Ingredient extends Model {
 	public ingredient_id!: number;

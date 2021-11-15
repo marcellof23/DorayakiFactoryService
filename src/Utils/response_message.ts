@@ -27,3 +27,24 @@ export const DORAYAKIREQUEST_LOG = {
 		},
 	},
 };
+
+export const INGREDIENT_LOG = {
+	GET: {
+		200: "Data ingredient",
+		404: "Ingredient tidak ditemukan!",
+	},
+	POST: {
+		200: "Ingredient berhasil dibuat",
+		400: {
+			BAD_REQUEST:
+				"Pastikan ingredient memiliki nama, stock dan satuan yang digunakan!",
+			BAD_ENUM: "Pastikan satuan yang digunakan benar!",
+		},
+	},
+	PUT: {
+		200: "Ingredient berhasil diperbaharui!",
+		400: {
+			BAD_REQUEST: "Ada perubahan yang tidak valid!",
+		},
+	},
+};
