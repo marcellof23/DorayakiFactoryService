@@ -8,6 +8,7 @@ import { RECIPE_LOG, SERVER_LOG } from "Utils/response_message/";
 
 const Recipe = db.Recipe;
 const Ingredient = db.Ingredient;
+const RecipeIngredient = db.RecipeIngredient;
 
 const options = {
   allowUnknown: true, // ignore unknown props
@@ -36,45 +37,51 @@ export const create_recipe = async (req: Request, res: Response) => {
   try {
     const schema = Joi.object({
       name: Joi.string().min(6).required(),
-      Ingredients: Joi.object()
-        .keys({
-          name: Joi.string().min(6).required(),
-          stock: Joi.number().min(0).required(),
-          unit: Joi.string()
-            .valid(
-              UnitEnum.gram,
-              UnitEnum.ml,
-              UnitEnum.tbsp,
-              UnitEnum.tsp,
-              UnitEnum.pcs
-            )
-            .required(),
+      Ingredients: Joi.array()
+        .items({
+          ingredient_id: Joi.number().min(0).required(),
+          qty_required: Joi.number().min(0).required(),
         })
         .required(),
     });
 
     const { error } = schema.validate(req.body, options);
 
-    const { name, stock, unit } = req.body;
-    let ingredient = new Ingredient();
+    const { name, Ingredients } = req.body;
+    let recipe = new Recipe();
 
+    console.log(error);
     if (error)
       return sendRes(res, 400, RECIPE_LOG.POST[400].BAD_REQUEST, error);
 
-    ingredient = await Ingredient.create({ name, stock, unit });
+    recipe = await Recipe.create({ name });
 
-    return sendRes(res, 200, RECIPE_LOG.POST[200], ingredient);
+    console.log(recipe);
+
+    for (let recipeIntegredient of Ingredients) {
+      const { qty_required, ingredient_id } = recipeIntegredient;
+      let recipeIngredient = new RecipeIngredient();
+      recipeIngredient = await RecipeIngredient.create({
+        recipe_id: recipe.recipe_id,
+        ingredient_id,
+        qty_required,
+      });
+
+      console.log(recipeIngredient);
+    }
+
+    return sendRes(res, 200, RECIPE_LOG.POST[200], recipe);
   } catch (err) {
     return sendRes(res, 500, SERVER_LOG[500], err.message);
   }
 };
 
-export const update_ingredient = async (req: Request, res: Response) => {
+export const update_recipe = async (req: Request, res: Response) => {
   try {
-    const { ingredient_id } = req.params;
-    const ingredient = await Ingredient.findByPk(ingredient_id);
+    const { recipe_id } = req.params;
+    const recipe = await Recipe.findByPk(recipe_id);
 
-    if (!ingredient) return sendRes(res, 404, RECIPE_LOG.GET[404]);
+    if (!recipe) return sendRes(res, 404, RECIPE_LOG.GET[404]);
 
     const schema = Joi.object({
       name: Joi.string().min(6).required(),
@@ -99,15 +106,13 @@ export const update_ingredient = async (req: Request, res: Response) => {
 
     if (error) return sendRes(res, 400, RECIPE_LOG.PUT[400].BAD_REQUEST, error);
 
-    const { name, stock, unit } = req.body;
+    const { name } = req.body;
 
-    ingredient.name = name ? name : ingredient.name;
-    ingredient.stock = stock ? stock : ingredient.stock;
-    ingredient.unit = unit ? unit : ingredient.unit;
+    recipe.name = name ? name : recipe.name;
 
-    await ingredient.save();
+    await recipe.save();
 
-    return sendRes(res, 200, RECIPE_LOG.POST[200], ingredient);
+    return sendRes(res, 200, RECIPE_LOG.POST[200], recipe);
   } catch (err) {
     return sendRes(res, 500, SERVER_LOG[500], err.message);
   }

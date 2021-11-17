@@ -59,3 +59,24 @@ export const INGREDIENT_LOG = {
     },
   },
 };
+
+export const USER_LOG = {
+  GET: {
+    200: "Data User",
+    404: "User tidak ditemukan!",
+  },
+  POST: {
+    200: "User berhasil login",
+    400: {
+      BAD_REQUEST: "Terdapat kesalahan pada username atau password!",
+      FAIL: "User gagal dibuat",
+      BAD_ENUM: "Pastikan satuan yang digunakan benar!",
+    },
+  },
+  PUT: {
+    200: "User berhasil diperbaharui!",
+    400: {
+      BAD_REQUEST: "Ada perubahan yang tidak valid!",
+    },
+  },
+};
