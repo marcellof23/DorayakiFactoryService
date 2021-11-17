@@ -6,20 +6,20 @@ import Recipe from "./Recipe";
 import RecipeIngredient from "./RecipeIngredient";
 
 Recipe.belongsToMany(Ingredient, {
-	through: RecipeIngredient,
-	foreignKey: "recipe_id",
+  through: RecipeIngredient,
+  foreignKey: "recipe_id",
 });
 
 Ingredient.belongsToMany(Recipe, {
-	through: RecipeIngredient,
-	foreignKey: "ingredient_id",
+  through: RecipeIngredient,
+  foreignKey: "ingredient_id",
 });
 
 export {
-	LogRequest,
-	User,
-	DorayakiRequest,
-	Ingredient,
-	Recipe,
-	RecipeIngredient,
+  LogRequest,
+  User,
+  DorayakiRequest,
+  Ingredient,
+  Recipe,
+  RecipeIngredient,
 };
