@@ -54,7 +54,10 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: process.env.JWT_EXPIRES,
     });
 
-    return sendRes(res, 200, USER_LOG.POST[200], token);
+    return sendRes(res, 200, USER_LOG.POST[200], {
+      user,
+      token
+    });
   } catch (err) {
     return sendRes(res, 400, USER_LOG.POST[400].FAIL);
   }
