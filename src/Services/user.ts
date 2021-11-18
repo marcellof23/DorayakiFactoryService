@@ -28,11 +28,14 @@ export const login = async (req: Request, res: Response) => {
 
     const { username, password } = req.body;
     const where = { username };
-    const user = await User.findOne({ where });
+    const user: UserModel = await User.findOne({ where });
 
     if (!user) return sendRes(res, 400, USER_LOG.POST[400].BAD_REQUEST);
 
-    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    const isCorrectPassword = await user.check_password(
+      password,
+      user.password
+    );
 
     if (!isCorrectPassword) {
       return sendRes(res, 400, USER_LOG.POST[400].BAD_REQUEST);

@@ -12,8 +12,9 @@ const protect_route = async (req, res, next) => {
       throw new Error("You are not logged in! Please log in to get access.");
 
     // Verify token
-    const { id } = await verify_token(token, process.env.JWT_SECRET_KEY);
-    const where = { id };
+    const temp = await verify_token(token, process.env.JWT_SECRET_KEY);
+    const user_id = temp.user.user_id;
+    const where = { user_id };
     // Check user
     const user = await User.findOne({ where });
     if (!user)
