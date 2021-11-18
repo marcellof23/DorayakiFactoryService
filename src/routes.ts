@@ -4,12 +4,14 @@ import * as DorayakiRequestService from "Services/dorayakirequest";
 import * as RecipeService from "Services/recipe/";
 import * as IngredientService from "Services/ingredient";
 import * as UserService from "Services/user";
+import protect_route from "Middleware/protect_route";
 
 export default () => {
   const router = Router();
 
-  //user route
-  router.post("/auth", UserService.login);
+  //Authentication and Authorization route
+  router.post("/auth/login", UserService.login);
+  router.get("/auth", protect_route, UserService.auth);
 
   //recipe route
   router.get("/recipe", RecipeService.get_recipes);

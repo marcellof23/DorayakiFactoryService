@@ -56,3 +56,7 @@ export const login = async (req: Request, res: Response) => {
     return sendRes(res, 400, USER_LOG.POST[400].FAIL);
   }
 };
+
+export const auth = async (req: any, res: Response) => {
+  return sendRes(res, 200, USER_LOG.POST[200], { user: req.user });
+};
