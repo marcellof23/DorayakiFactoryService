@@ -25,6 +25,7 @@ export const RECIPE_LOG = {
 
 export const DORAYAKIREQUEST_LOG = {
   GET: {
+    200: "List of dorayaki requests",
     404: "Request tidak ditemukan",
   },
   POST: {
@@ -32,10 +33,10 @@ export const DORAYAKIREQUEST_LOG = {
       200: "Request berhasil dibuat",
       400: "Request gagal dibuat, pastikan anda memasukan resep dan kuantitas dengan benar",
     },
-    ACCEPT: {
-      200: "Request berhasil diterima",
-      400: "Request gagal diterima, pastikan request tersebut belum diterima/ditolak sebelumnya",
-    },
+  },
+  PUT: {
+    200: "Request berhasil diterima",
+    400: "Request gagal diterima, pastikan request tersebut belum diterima/ditolak sebelumnya",
   },
 };
 

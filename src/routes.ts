@@ -20,10 +20,11 @@ export default () => {
   router.put("/recipe/:recipe_id", RecipeService.update_recipe);
 
   //dorayaki request routes
+  router.get("/dorayaki-request", DorayakiRequestService.get_all_request);
   router.post("/dorayaki-request", DorayakiRequestService.create_request);
-  router.post(
-    "/dorayaki-request/accept/:dorayakirequest_id",
-    DorayakiRequestService.accept_request
+  router.put(
+    "/dorayaki-request/:dorayakirequest_id",
+    DorayakiRequestService.update_request
   );
 
   //ingredient routes
