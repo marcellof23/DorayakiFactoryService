@@ -35,8 +35,8 @@ export const DORAYAKIREQUEST_LOG = {
     },
   },
   PUT: {
-    200: "Request berhasil diterima",
-    400: "Request gagal diterima, pastikan request tersebut belum diterima/ditolak sebelumnya",
+    200: "Request berhasil diperbaharui",
+    400: ["Request gagal diperbaharui, pastikan status yang diberikan benar", "Request gagal diperbaharui, pastikan request tersebut belum diterima/ditolak sebelumnya", "Request gagal diperbaharui, pastikan ingredients cukup"],
   },
 };
 
