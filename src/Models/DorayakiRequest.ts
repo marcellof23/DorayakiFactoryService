@@ -1,8 +1,7 @@
 import sequelize from "Loaders/sequelize/connection";
-import {DataTypes, Model} from "sequelize";
-import {DorayakiRequestStatus} from "Utils/enum/";
-import {DORAYAKIREQUEST_LOG} from "Utils/response_message/";
-import {Ingredient, Recipe, RecipeIngredient} from ".";
+import { DataTypes, Model } from "sequelize";
+import { DorayakiRequestStatus } from "Utils/enum/";
+import { Ingredient, Recipe, RecipeIngredient } from ".";
 
 class DorayakiRequest extends Model {
 	public dorayakirequest_id!: number;
@@ -13,7 +12,19 @@ class DorayakiRequest extends Model {
 
 	public status: DorayakiRequestStatus;
 
-	public isAcceptable: (dr: DorayakiRequest) => Promise<boolean>;
+	public isAcceptable: () => Promise<boolean> = async () => {
+		const { recipe_id, qty } = this;
+
+		// getting all the recipe ingredients
+		const recipe: Recipe = await Recipe.findByPk(recipe_id, {
+			include: Ingredient
+		});
+		const ingredients = recipe.Ingredients as [
+			Ingredient & { RecipeIngredient: RecipeIngredient }
+		];
+
+		return ingredients.every(i => i.stock >= i.RecipeIngredient.qty_required * qty)
+	};
 }
 
 DorayakiRequest.init(
@@ -25,7 +36,7 @@ DorayakiRequest.init(
 			autoIncrement: true,
 		},
 		recipe_id: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
 		qty: {
@@ -52,28 +63,5 @@ DorayakiRequest.init(
 		updatedAt: "updated_at",
 	}
 );
-
-DorayakiRequest.prototype.isAcceptable = async (dr: DorayakiRequest) => {
-	const {recipe_id, qty, status} = dr;
-
-	// if (status != DorayakiRequestStatus.pending)
-	// 	throw new Error(DORAYAKIREQUEST_LOG.POST.CREATE[400]);
-
-	//getting all the recipe ingredients
-	// const recipe: Recipe = await Recipe.findByPk(recipe_id, {
-	// 	include: Ingredient,
-	// });
-	// const ingredients = recipe.Ingredients;
-	// console.log(ingredients);
-	// stock checking
-	let res = false;
-	// for (let i = 0; i < ingredients.length && !res; i++) {
-	// 	const target: Ingredient = ingredients[i];
-	// const required = target.qty_required * qty;
-
-	// console.log(target);
-	// }
-	return res;
-};
 
 export default DorayakiRequest;
