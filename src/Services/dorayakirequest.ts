@@ -62,6 +62,21 @@ export const get_all_request = async (req: Request, res: Response) => {
 	}
 };
 
+export const get_request = async (req: Request, res: Response) => {
+	try {
+		const dorayakirequest = await DorayakiRequest.findByPk(req.params.dorayakirequest_id);
+
+		return sendRes(
+			res,
+			200,
+			DORAYAKIREQUEST_LOG.GET[200],
+			dorayakirequest
+		);
+	} catch (err) {
+		return sendRes(res, 500, SERVER_LOG[500], err.message);
+	}
+};
+
 export const update_request = async (req: Request, res: Response) => {
 	try {
 		const { dorayakirequest_id } = req.params;

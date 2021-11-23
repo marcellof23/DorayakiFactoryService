@@ -21,6 +21,10 @@ export default () => {
 
   //dorayaki request routes
   router.get("/dorayaki-request", DorayakiRequestService.get_all_request);
+  router.get(
+    "/dorayaki-request/:dorayakirequest_id",
+    DorayakiRequestService.get_request
+  );
   router.post("/dorayaki-request", DorayakiRequestService.create_request);
   router.put(
     "/dorayaki-request/:dorayakirequest_id",
