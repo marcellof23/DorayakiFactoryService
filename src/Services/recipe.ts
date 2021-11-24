@@ -15,8 +15,32 @@ const options = {
   stripUnknown: true, // remove unknown props
 };
 
+function renameKey(obj, oldKey, newKey) {
+  obj[newKey] = obj[oldKey];
+  delete obj[oldKey];
+}
+
 export const get_recipes = async (_: Request, res: Response) => {
-  const recipes = await Recipe.findAll();
+  // const include ={
+  //   model: Customer,
+  //   attributes: ["customerName", "phoneNumber"],
+  // }, {
+  //   model: Customer,
+  //   attributes: ["customerName", "phoneNumber"],
+  // }
+
+  const include = [
+    {
+      model: Ingredient,
+      attributes: ["name", "unit"],
+    },
+  ];
+
+  const recipes = await Recipe.findAll({
+    include,
+  });
+
+  console.log(recipes[0]);
 
   sendRes(res, 200, RECIPE_LOG.GET[200], recipes);
 };
