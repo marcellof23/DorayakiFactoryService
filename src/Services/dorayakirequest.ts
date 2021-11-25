@@ -49,7 +49,9 @@ export const create_request = async (req: Request, res: Response) => {
 
 export const get_all_request = async (req: Request, res: Response) => {
 	try {
-		const dorayakirequest = await DorayakiRequest.findAll();
+		const dorayakirequest = await DorayakiRequest.findAll({
+			include: Recipe
+		});
 
 		return sendRes(
 			res,
