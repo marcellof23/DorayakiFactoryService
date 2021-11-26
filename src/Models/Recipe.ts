@@ -20,6 +20,7 @@ Recipe.init(
       onDelete: "cascade",
     },
     name: {
+      unique: true,
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 1,

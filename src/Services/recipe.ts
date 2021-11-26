@@ -64,6 +64,15 @@ export const create_recipe = async (req: Request, res: Response) => {
     const { error } = schema.validate(req.body, options);
 
     const { name, Ingredients } = req.body;
+
+    let existRecipe = await Recipe.findOne({
+      where: {
+        name
+      }
+    })
+    if (existRecipe)
+      return sendRes(res, 400, 'Recipe with the same name exist', 'Recipe with the same name exists');
+
     let recipe = new Recipe();
 
     console.log(error);
