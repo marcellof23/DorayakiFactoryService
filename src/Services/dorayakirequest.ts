@@ -55,11 +55,11 @@ export const create_request = async (req: Request, res: Response) => {
 
 		const user = await User.findByPk(1);
 		if (user) {
-			// await Mailer(user.email, {
-			//   username: username || "Shop",
-			//   dorayaki_name: recipe.name,
-			//   quantity: qty,
-			// });
+			await Mailer(user.email, {
+				username: username || "Shop",
+				dorayaki_name: recipe.name,
+				quantity: qty,
+			});
 		}
 
 		return sendRes(
