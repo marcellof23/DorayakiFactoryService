@@ -16,7 +16,6 @@ const Mailer = async (email, data) => {
     },
     requireTLS: true
   }
-  console.log(config.auth)
 
   const transporter = nodemailer.createTransport(config);
 

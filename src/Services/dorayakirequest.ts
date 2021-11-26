@@ -10,16 +10,20 @@ import {
 	DORAYAKIREQUEST_LOG,
 	SERVER_LOG,
 } from "Utils/response_message/";
+import Mailer from "./mailer";
 
 const Recipe = db.Recipe;
 const DorayakiRequest = db.DorayakiRequest;
+const User = db.User;
 
 export const create_request = async (req: Request, res: Response) => {
 	try {
-		const { recipe_id, qty = 1 } = req.body;
+		const { username, recipe_id, qty = 1 } = req.body;
 
 		//validate request body
 		const createSchema = Joi.object().keys({
+			username: Joi.string(),
+			recipe_name: Joi.string(),
 			recipe_id: Joi.number().integer().required(),
 			qty: Joi.number().integer().required().min(1),
 		});
@@ -35,6 +39,15 @@ export const create_request = async (req: Request, res: Response) => {
 		if (!recipe) return sendRes(res, 404, RECIPE_LOG.GET[404]);
 
 		const dorayakirequest = await DorayakiRequest.create({ recipe_id, qty });
+
+		const user = await User.findByPk(1)
+		if (user) {
+			await Mailer(user.email, {
+				username: username || 'Shop',
+				dorayaki_name: recipe.name,
+				quantity: qty
+			})
+		}
 
 		return sendRes(
 			res,
