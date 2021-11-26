@@ -58,6 +58,15 @@ export const create_ingredient = async (req: Request, res: Response) => {
 		const { error } = schema.validate(req.body, options);
 
 		const { name, stock, unit } = req.body;
+
+		let existIng = await Ingredient.findOne({
+			where: {
+				name
+			}
+		})
+		if (existIng)
+			return sendRes(res, 400, 'Ingredient with the same name exist', 'Ingredient with the same name exists');
+
 		let ingredient = new Ingredient();
 
 		if (error)
