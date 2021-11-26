@@ -21,14 +21,6 @@ function renameKey(obj, oldKey, newKey) {
 }
 
 export const get_recipes = async (_: Request, res: Response) => {
-  // const include ={
-  //   model: Customer,
-  //   attributes: ["customerName", "phoneNumber"],
-  // }, {
-  //   model: Customer,
-  //   attributes: ["customerName", "phoneNumber"],
-  // }
-
   const include = [
     {
       model: Ingredient,
