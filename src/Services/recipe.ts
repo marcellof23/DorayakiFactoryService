@@ -52,7 +52,7 @@ export const get_recipe = async (req: Request, res: Response) => {
 export const create_recipe = async (req: Request, res: Response) => {
   try {
     const schema = Joi.object({
-      name: Joi.string().min(6).required(),
+      name: Joi.string().min(3).required(),
       Ingredients: Joi.array()
         .items({
           ingredient_id: Joi.number().min(0).required(),
@@ -100,10 +100,10 @@ export const update_recipe = async (req: Request, res: Response) => {
     if (!recipe) return sendRes(res, 404, RECIPE_LOG.GET[404]);
 
     const schema = Joi.object({
-      name: Joi.string().min(6).required(),
+      name: Joi.string().min(3).required(),
       Ingredients: Joi.object()
         .keys({
-          name: Joi.string().min(6).required(),
+          name: Joi.string().min(3).required(),
           stock: Joi.number().min(0).required(),
           unit: Joi.string()
             .valid(

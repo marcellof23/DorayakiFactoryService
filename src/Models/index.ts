@@ -15,6 +15,10 @@ Ingredient.belongsToMany(Recipe, {
   foreignKey: "ingredient_id",
 });
 
+DorayakiRequest.belongsTo(Recipe, {
+  foreignKey: "recipe_id"
+})
+
 export {
   LogRequest,
   User,
