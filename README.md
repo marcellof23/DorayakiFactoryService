@@ -1,48 +1,90 @@
-# How To Run & Deploy
+# Dorayaki Service (REST)
 
-1. Make A Directory on VPS
-```sh
-mkdir apps/backend
-```
+Web service untuk melayani kebutuhan pabrik yoshiyaki :D
 
-2. CD to that directory
-```sh
-cd apps/backend
-```
+## Skema Basis Data yang Digunakan
 
-3. Clone the repository
-```sh
-git clone https://github.com/michaelpege/express-ts-sequelize-boilerplate .
-```
+Terdapat 6 buah models yang didaftarkan pada web service ini untuk melayani kebutuhan pabrik yoshiyaki. Keenam model tersebut adalah sebagai berikut :
 
-4. Copy the .env.copy to .env and configure the domain on .env
-```sh
-cp .env.copy .env
-```
+- DorayakiRequest:
 
-4. Change the domain and email on docker-compose.yaml
-```sh
-nano docker-compose.yaml
-```
+  - dorayakirequest_id: number
+  - recipe_id: number
+  - qty: number
+  - status: ENUM("pending", "accepted", "denied")
 
-5. Change the domain and email on scripts/init-letsencrypt.sh
-```sh
-nano scripts/init-letsencrypt.sh
-```
+- Ingredient:
 
-6. Change the domain and port on data/nginx/app.conf.sh
-```sh
-nano scripts/init-letsencrypt.sh
-```
+  - ingredient_id: number
+  - name: string
+  - stock: number
+  - unit: ENUM("gram", "ml", "tbsp", "tsp", "pcs")
 
-7. Allow init-letsencrypt.sh to write file
-```sh
-chmod +x scripts/init-letsencrypt.sh
-```
+- LogRequest:
 
-8. Run init-letsencrypt.sh
-```sh
-sudo scripts/init-letsencrypt.sh
-```
+  - logrequest_id : number
+  - ip: string
+  - endpoint: string
 
-9. All done!
+- Recipe:
+
+  - recipe_id : number
+  - name: string
+
+- RecipeIngredient:
+
+  - recipe_id : number
+  - ingredient_id: number
+  - qty_required : number
+
+- User:
+  - user_id : number
+  - username: string
+  - name: string
+  - password: string
+
+Service yang terdaftar pada web service ini adalah sebagai berikut
+
+#### - Auth Service
+
+Service ini berfungsi untuk menghandle semua yang berkaitan dengan autentikasi user dalam menggunakan aplikasi pabrik ini. Terdapat dua endpoint utama yaitu :
+
+- [POST] /auth/login : melayani fitur login
+- [GET] /auth : mengambil data dari token yang dikirim
+
+#### - Recipe Service
+
+Service ini berfungsi untuk menghandle semua yang berkaitan dengan recipe yang terdaftar dalam pabrik ini. Terdapat empatendpoint utama yaitu :
+
+- [GET] /recipe : mengambil seluruh recipe yang terdaftar
+- [GET] /recipe/:recipe_id : mengambil recipe dengan id tertentu
+- [POST] /recipe : menambahkan/mendaftarkan recipe baru
+- [PUT] /recipe/:recipe_id : mengubah recipe yang sudah ada
+
+#### - Dorayaki Request Service
+
+Service ini berfungsi untuk menghandle semua yang berkaitan dengan recipe yang terdaftar dalam pabrik ini. Terdapat empatendpoint utama yaitu :
+
+- [GET] /dorayaki-request: mengambil seluruh request yang terdaftar
+- [GET] /dorayaki-request/:dorayakirequest_id: mengambil request dengan id tertentu
+- [POST] /dorayaki-request: menambahkan/mendaftarkan request baru
+- [PUT] /dorayaki-request/:dorayakirequest_id: mengubah request yang sudah ada
+
+#### - Ingredient Service
+
+Service ini berfungsi untuk menghandle semua yang berkaitan dengan recipe yang terdaftar dalam pabrik ini. Terdapat empatendpoint utama yaitu :
+
+- [GET] /ingredient: mengambil seluruh ingredient yang terdaftar
+- [GET] /ingredient/:ingredient_id: mengambil ingredient dengan id tertentu
+- [POST] /ingredient: menambahkan/mendaftarkan ingredient baru
+- [PUT] /ingredient/:ingredient_id: mengubah ingredient yang sudah ada
+
+## Pembagian Tugas
+
+- Setup Express : 13519121
+- Models: 13519086, 13519121, 13519134
+- Auth : 13519134
+- Recipe : 13519086
+- Dorayaki Request: 13519134
+- Mailer : 13519134
+- Ingredient: 13519121

@@ -1,7 +1,6 @@
 import sequelize from "Loaders/sequelize/connection";
-import {DataTypes, Model} from "sequelize";
-import {UnitEnum} from "Utils/enum/";
-import {RecipeIngredient, Recipe} from ".";
+import { DataTypes, Model } from "sequelize";
+import { UnitEnum } from "Utils/enum/";
 
 class Ingredient extends Model {
 	public ingredient_id!: number;
@@ -22,6 +21,7 @@ Ingredient.init(
 			autoIncrement: true,
 		},
 		name: {
+			unique: true,
 			type: DataTypes.STRING,
 			allowNull: false,
 			defaultValue: 1,

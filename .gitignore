@@ -121,3 +121,4 @@ src/Public/Uploads/*
 
 data/dhparam/*.pem
 data/certbot
+data/mysql
